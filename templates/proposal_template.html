@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    h1 { color: #005b96; }
+    .section { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Chainfly Solar Proposal</h1>
+  <div class="section">
+    <strong>Location:</strong> {{ latitude }}, {{ longitude }}<br>
+    <strong>Rooftop Area:</strong> {{ rooftop_area }} m²<br>
+    <strong>Monthly Bill:</strong> ₹{{ monthly_bill }}
+  </div>
+
+  <div class="section">
+    <strong>System Size:</strong> {{ system_size }} kW<br>
+    <strong>Shadow Risk:</strong> {{ shadow_risk }}<br>
+    <strong>Orientation OK:</strong> {{ orientation_ok }}<br>
+    <strong>Suitable:</strong> {{ suitable }}
+  </div>
+
+  <div class="section">
+    <strong>Monthly Savings:</strong> ₹{{ savings.monthly_savings }}<br>
+    <strong>Payback Period:</strong> {{ savings.payback_period_months }} months<br>
+    <strong>ROI (25 yrs):</strong> {{ savings.roi_percent_25yr }}%
+  </div>
+</body>
+</html>
