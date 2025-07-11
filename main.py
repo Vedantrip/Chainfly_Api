@@ -15,3 +15,7 @@ app.add_middleware(
 
 # ✅ Include your router
 app.include_router(feasibility.router)
+
+@app.get("/")
+def root():
+    return {"message": "ChainFly API is live 🚀"}
