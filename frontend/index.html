@@ -3,12 +3,11 @@
 <head>
   <title>ChainFly Solar Quote Generator</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2em; background: #f2f2f2; }
+    body { font-family: Arial, sans-serif; padding: 2em; }
     label { display: block; margin-top: 12px; }
     input, button { margin-top: 4px; padding: 6px; width: 300px; }
-    button { width: auto; background-color: #007BFF; color: white; border: none; cursor: pointer; }
-    button:hover { background-color: #0056b3; }
-    #result { margin-top: 20px; padding: 10px; background: white; border-radius: 5px; }
+    button { width: auto; }
+    #result { margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -52,7 +51,7 @@
       };
 
       const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = "⏳ Processing your request...";
+      resultDiv.innerHTML = "Processing...";
 
       try {
         const res = await fetch('https://chainflyapi-production.up.railway.app/feasibility', {
@@ -61,7 +60,9 @@
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error("Proposal generation failed. Please try again.");
+        if (!res.ok) {
+          throw new Error("Failed to generate proposal.");
+        }
 
         const result = await res.json();
         const pdfFile = result.proposal_pdf.split('/').pop();
@@ -70,7 +71,7 @@
           <h4>✅ Proposal Generated</h4>
           <p><strong>System Size:</strong> ${result.feasibility.system_size_kw} kW</p>
           <p><strong>Monthly Savings:</strong> ₹${result.savings.monthly_savings}</p>
-          <a href="https://chainflyapi-production.up.railway.app/generated_pdfs/${pdfFile}" target="_blank">📄 Download Your PDF</a>
+          <a href="https://chainflyapi-production.up.railway.app/generated_pdfs/${pdfFile}" target="_blank">📄 Download PDF Proposal</a>
         `;
       } catch (err) {
         resultDiv.innerHTML = `<span style="color: red;">❌ Error: ${err.message}</span>`;
@@ -80,3 +81,4 @@
   </script>
 </body>
 </html>
+
