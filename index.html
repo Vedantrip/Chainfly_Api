@@ -54,7 +54,7 @@
       resultDiv.innerHTML = "Processing...";
 
       try {
-        const res = await fetch('http://127.0.0.1:8000/feasibility', {
+        const res = await fetch('https://chainflyapi-production.up.railway.app/feasibility', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
@@ -65,13 +65,13 @@
         }
 
         const result = await res.json();
-        const pdfPath = result.proposal_pdf.replace("generated_pdfs/", "");
+        const pdfFile = result.proposal_pdf.split('/').pop();
 
         resultDiv.innerHTML = `
           <h4>✅ Proposal Generated</h4>
           <p><strong>System Size:</strong> ${result.feasibility.system_size_kw} kW</p>
           <p><strong>Monthly Savings:</strong> ₹${result.savings.monthly_savings}</p>
-          <a href="/generated_pdfs/${pdfPath}" target="_blank">📄 Download PDF Proposal</a>
+          <a href="https://chainflyapi-production.up.railway.app/generated_pdfs/${pdfFile}" target="_blank">📄 Download PDF Proposal</a>
         `;
       } catch (err) {
         resultDiv.innerHTML = `<span style="color: red;">❌ Error: ${err.message}</span>`;
