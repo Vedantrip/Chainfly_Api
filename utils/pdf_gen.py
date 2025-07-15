@@ -63,7 +63,7 @@ def generate_proposal_pdf(data: dict, savings: dict, output_dir="generated_pdfs"
     net = fmt_currency(savings.get("net_capex", 0))
     savings_m = fmt_currency(savings.get("monthly_savings", 0))
     roi = f"{savings.get('roi_percent_25yr', 0)}%"
-    payback = f"{int(savings.get('payback_years', 0) * 12)} months"
+    payback = f"{int(savings.get('payback_years', 0) * 12)} mo"
 
     c.setFont("Helvetica", 10)
     c.setFillColorRGB(0.9, 0.95, 1)
