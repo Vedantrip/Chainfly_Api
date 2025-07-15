@@ -1,40 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ChainFly Solar Quote Generator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChainFly Solar Quote</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; padding: 2em; }
-    label { display: block; margin-top: 12px; }
-    input, button { margin-top: 4px; padding: 6px; width: 300px; }
-    button { width: auto; }
-    #result { margin-top: 20px; }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #f0f4f8, #d9e6f2);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 480px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #004e92;
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 18px;
+      font-size: 1rem;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .checkbox input {
+      margin-right: 10px;
+    }
+
+    button {
+      background-color: #0074e4;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 0.95rem;
+    }
+
+    #result a {
+      color: #0074e4;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    #result a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <h2>ChainFly Rooftop Solar Quote</h2>
 
-  <form id="quoteForm">
-    <label>Customer Name:
-      <input type="text" name="customer_name" required>
-    </label>
-    <label>Latitude:
-      <input type="number" name="latitude" step="0.0001" required>
-    </label>
-    <label>Longitude:
-      <input type="number" name="longitude" step="0.0001" required>
-    </label>
-    <label>Rooftop Area (m²):
-      <input type="number" name="rooftop_area_m2" required>
-    </label>
-    <label>Monthly Bill (₹):
-      <input type="number" name="monthly_bill" required>
-    </label>
-    <label><input type="checkbox" name="is_premium"> Use premium panels?</label>
+  <div class="card">
+    <h2>ChainFly Rooftop Solar Quote</h2>
+    <form id="quoteForm">
+      <label>Customer Name:
+        <input type="text" name="customer_name" required />
+      </label>
+      <label>Latitude:
+        <input type="number" name="latitude" step="0.0001" required />
+      </label>
+      <label>Longitude:
+        <input type="number" name="longitude" step="0.0001" required />
+      </label>
+      <label>Rooftop Area (m²):
+        <input type="number" name="rooftop_area_m2" required />
+      </label>
+      <label>Monthly Bill (₹):
+        <input type="number" name="monthly_bill" required />
+      </label>
+      <div class="checkbox">
+        <input type="checkbox" name="is_premium" />
+        <label for="is_premium">Use premium panels?</label>
+      </div>
+      <button type="submit">Generate Proposal</button>
+    </form>
 
-    <button type="submit">Generate Proposal</button>
-  </form>
-
-  <div id="result"></div>
+    <div id="result"></div>
+  </div>
 
   <script>
     document.getElementById('quoteForm').addEventListener('submit', async function(e) {
@@ -60,24 +154,24 @@
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error("Failed to generate proposal.");
+        if (!res.ok) throw new Error("Failed to generate proposal");
 
         const result = await res.json();
-        const pdfPath = result.proposal_pdf.replace("generated_pdfs/", "");
+        const file = result.proposal_pdf.replace("generated_pdfs/", "");
 
         resultDiv.innerHTML = `
           <h4>✅ Proposal Generated</h4>
           <p><strong>System Size:</strong> ${result.feasibility.system_size_kw} kW</p>
           <p><strong>Monthly Savings:</strong> ₹${result.savings.monthly_savings}</p>
-          <a href="https://chainflyapi-production.up.railway.app/generated_pdfs/${pdfPath}" target="_blank">
-            📄 Download PDF Proposal
-          </a>
+          <p><a href="https://chainflyapi-production.up.railway.app/generated_pdfs/${file}" target="_blank">📄 Download PDF</a></p>
         `;
       } catch (err) {
-        resultDiv.innerHTML = `<span style="color: red;">❌ Error: ${err.message}</span>`;
+        resultDiv.innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
         console.error(err);
       }
     });
   </script>
+
 </body>
 </html>
+
