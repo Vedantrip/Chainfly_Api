@@ -35,7 +35,7 @@ _or your live Deta backend URL_
 
 | User Input Form | PDF Output |
 |-----------------|------------|
-| ![UI](./assets/ui-screenshot.png) | ![PDF](./assets/sample-pdf.png) |
+| ![UI](./assets/chainfly_logo.png) | ![PDF](./generated_pdfs/rajeev_proposal_20250705.pdf) |
 
 ---
 
