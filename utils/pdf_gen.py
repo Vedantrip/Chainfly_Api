@@ -1,4 +1,3 @@
-#------------------------------------------------------------------PDF Generator for ChainFly
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -155,3 +154,4 @@ def generate_proposal_pdf(data: dict, savings: dict, output_dir="generated_pdfs"
     c.save()
 
     return file_path
+
