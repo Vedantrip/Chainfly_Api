@@ -14,6 +14,7 @@ class FeasibilityRequest(BaseModel):
     customer_name: str
 
 @router.post("/feasibility")
+@router.post("/feasibility")
 def check_feasibility(data: FeasibilityRequest):
     # Pass panel_type to the calculation function
     system_size = calculate_system_size(data.rooftop_area_m2, data.panel_type)
@@ -25,20 +26,19 @@ def check_feasibility(data: FeasibilityRequest):
 
     savings = estimate_savings_and_roi(system_size, data.monthly_bill)
 
-    # PDF Report Generation payload
+    # 1. Create one complete payload with all data
     payload = {
-        "latitude": data.latitude,
-        "longitude": data.longitude,
-        "rooftop_area_m2": data.rooftop_area_m2,
-        "monthly_bill": data.monthly_bill,
+        **data.dict(), # Include original data like name, location, etc.
         "system_size_kw": system_size,
         "shadow_risk": shadow_risk,
         "orientation_ok": orientation_ok,
         "suitable": suitable,
     }
 
-    pdf_path = generate_proposal_pdf(data.dict(), savings)
+    # 2. Pass the complete payload to the PDF generator
+    pdf_path = generate_proposal_pdf(payload, savings)
 
+    # 3. Return the payload and other details (with no duplicate return)
     return {
         "feasibility": payload,
         "savings": savings,
