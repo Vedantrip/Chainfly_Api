@@ -10,12 +10,13 @@ class FeasibilityRequest(BaseModel):
     longitude: float
     rooftop_area_m2: float
     monthly_bill: float
-    is_premium: bool = False
-    customer_name: str  # 👈 Add this
+    panel_type: str = "basic"  # 👈 Changed from is_premium
+    customer_name: str
 
 @router.post("/feasibility")
 def check_feasibility(data: FeasibilityRequest):
-    system_size = calculate_system_size(data.rooftop_area_m2, data.is_premium)
+    # Pass panel_type to the calculation function
+    system_size = calculate_system_size(data.rooftop_area_m2, data.panel_type)
 
     # Trust-building placeholder logic
     shadow_risk = "Low" if data.latitude > 20 else "Moderate"
@@ -24,7 +25,7 @@ def check_feasibility(data: FeasibilityRequest):
 
     savings = estimate_savings_and_roi(system_size, data.monthly_bill)
 
-    # PDF Report Generation
+    # PDF Report Generation payload
     payload = {
         "latitude": data.latitude,
         "longitude": data.longitude,
@@ -43,4 +44,3 @@ def check_feasibility(data: FeasibilityRequest):
         "savings": savings,
         "proposal_pdf": pdf_path
     }
-
