@@ -1,139 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ChainFly Solar Quote</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>ChainFly Solar Quote Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(to right, #f0f4f8, #d9e6f2);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .card {
-      background: #ffffff;
-      padding: 2rem 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 480px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #004e92;
-      margin-bottom: 24px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 18px;
-      font-size: 1rem;
-    }
-
-    .checkbox {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .checkbox input {
-      margin-right: 10px;
-    }
-
-    button {
-      background-color: #0074e4;
-      color: white;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1rem;
-      width: 100%;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #005bb5;
-    }
-
-    #result {
-      margin-top: 20px;
-      font-size: 0.95rem;
-    }
-
-    #result a {
-      color: #0074e4;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    #result a:hover {
-      text-decoration: underline;
-    }
-
-    .error {
-      color: red;
-      font-weight: bold;
-    }
+    body { font-family: Arial, sans-serif; padding: 2em; max-width: 600px; margin: auto; }
+    label { display: block; margin-top: 12px; }
+    input, select, button { margin-top: 4px; padding: 8px; width: 100%; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc; }
+    button { width: auto; cursor: pointer; background-color: #007bff; color: white; border: none; padding: 10px 15px; }
+    button:hover { background-color: #0056b3; }
+    .preset-buttons button { background-color: #6c757d; margin-right: 5px; }
+    #result { margin-top: 20px; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
+    #result h4 { margin-top: 0; }
+    .cta-buttons button { background-color: #28a745; margin-top: 10px; }
+    .cta-buttons button#bookSurveyBtn { background-color: #ffc107; color: black;}
   </style>
 </head>
 <body>
+  <h2>ChainFly Rooftop Solar Quote</h2>
 
-  <div class="card">
-    <h2>ChainFly Rooftop Solar Quote</h2>
-    <form id="quoteForm">
-      <label>Customer Name:
-        <input type="text" name="customer_name" required />
-      </label>
-      <label>Latitude:
-        <input type="number" name="latitude" step="0.0001" required />
-      </label>
-      <label>Longitude:
-        <input type="number" name="longitude" step="0.0001" required />
-      </label>
-      <label>Rooftop Area (m²):
-        <input type="number" name="rooftop_area_m2" required />
-      </label>
-      <label>Monthly Bill (₹):
-        <input type="number" name="monthly_bill" required />
-      </label>
-      <div class="checkbox">
-        <input type="checkbox" name="is_premium" />
-        <label for="is_premium">Use premium panels?</label>
-      </div>
-      <button type="submit">Generate Proposal</button>
-    </form>
+  <form id="quoteForm">
+    <h4>Common Use Cases:</h4>
+    <div class="preset-buttons">
+      <button type="button" class="presetBtn" data-area="70" data-bill="2000">2 BHK House – 3kW</button>
+      <button type="button" class="presetBtn" data-area="120" data-bill="4000">Small Shop – 5kW</button>
+    </div>
 
-    <div id="result"></div>
-  </div>
+    <label>Customer Name:
+      <input type="text" name="customer_name" required placeholder="e.g., Priya Singh">
+    </label>
+    <label>Latitude & Longitude:
+      <button type="button" id="autoDetectLocation" style="width: auto; margin-bottom: 5px;">📍 Auto-detect Location</button>
+      <input type="number" name="latitude" step="0.0001" required placeholder="e.g., 28.6139">
+      <input type="number" name="longitude" step="0.0001" required placeholder="e.g., 77.2090">
+    </label>
+    <label>Rooftop Area (m²):
+      <input type="number" name="rooftop_area_m2" required placeholder="e.g., 70">
+    </label>
+    <label>Monthly Bill (₹):
+      <input type="number" name="monthly_bill" required placeholder="e.g., 2500">
+    </label>
+    <label>Panel Type:
+      <select name="panel_type">
+        <option value="basic">Basic</option>
+        <option value="premium">Premium</option>
+        <option value="ultra_premium">Ultra Premium</option>
+      </select>
+    </label>
+
+    <button type="submit" style="margin-top: 20px;">Generate Proposal</button>
+  </form>
+
+  <div id="result"></div>
 
   <script>
+    // --- Auto-detect Location ---
+    document.getElementById('autoDetectLocation').addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          document.querySelector('[name="latitude"]').value = pos.coords.latitude.toFixed(4);
+          document.querySelector('[name="longitude"]').value = pos.coords.longitude.toFixed(4);
+        }, err => alert(`Geolocation Error: ${err.message}`));
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    });
+
+    // --- Presets ---
+    document.querySelectorAll('.presetBtn').forEach(button => {
+      button.addEventListener('click', function() {
+        document.querySelector('[name="rooftop_area_m2"]').value = this.dataset.area;
+        document.querySelector('[name="monthly_bill"]').value = this.dataset.bill;
+      });
+    });
+
+    // --- Form Submission ---
     document.getElementById('quoteForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const form = e.target;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = "Processing...";
 
       const data = {
         customer_name: form.customer_name.value,
@@ -141,37 +87,82 @@
         longitude: parseFloat(form.longitude.value),
         rooftop_area_m2: parseFloat(form.rooftop_area_m2.value),
         monthly_bill: parseFloat(form.monthly_bill.value),
-        is_premium: form.is_premium.checked
+        panel_type: form.panel_type.value
       };
 
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = "Processing...";
-
       try {
-        const res = await fetch('https://chainflyapi-production.up.railway.app/feasibility', {
+        const res = await fetch('http://127.0.0.1:8000/feasibility', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error("Failed to generate proposal");
+        if (!res.ok) throw new Error("API request failed.");
 
         const result = await res.json();
-        const file = result.proposal_pdf.replace("generated_pdfs/", "");
+        const { feasibility, savings, proposal_pdf } = result;
+        const pdfPath = proposal_pdf.replace("generated_pdfs/", "");
+
+        let subsidyMessage = savings.subsidy > 0
+          ? `<h5>🎉 You may be eligible for a ₹${savings.subsidy.toLocaleString()} subsidy under the MNRE scheme!</h5>`
+          : '';
 
         resultDiv.innerHTML = `
-          <h4>✅ Proposal Generated</h4>
-          <p><strong>System Size:</strong> ${result.feasibility.system_size_kw} kW</p>
-          <p><strong>Monthly Savings:</strong> ₹${result.savings.monthly_savings}</p>
-          <p><a href="https://chainflyapi-production.up.railway.app/generated_pdfs/${file}" target="_blank">📄 Download PDF</a></p>
+          <h4>✅ Your Solar Proposal is Ready!</h4>
+          <p><strong>📦 Suggested System Size:</strong> ${feasibility.system_size_kw} kW</p>
+          <p><strong>💸 Estimated Installation Cost:</strong> ₹${savings.net_capex.toLocaleString()}</p>
+          <p><strong>📈 Estimated Payback:</strong> ${savings.payback_years} years</p>
+          <p><strong>🌿 CO₂ Saved per Year:</strong> ${(feasibility.system_size_kw * 1.4).toFixed(2)} tons</p>
+          <p><strong>💰 Monthly Savings:</strong> ₹${savings.monthly_savings.toLocaleString()}</p>
+
+          <div style="margin: 20px 0;">
+            <canvas id="costBreakdownChart"></canvas>
+          </div>
+
+          ${subsidyMessage}
+          <hr>
+          <h4>Next Steps</h4>
+          <label>Enter Phone or Email to get the quote PDF:
+             <input type="text" id="leadContact" placeholder="Enter your contact info">
+          </label>
+          <div class="cta-buttons">
+            <button id="downloadPdfBtn" data-pdf-path="${pdfPath}">Download Quote (PDF)</button>
+            <button id="bookSurveyBtn">Book Site Survey for ₹499</button>
+          </div>
         `;
+
+        // --- Render Chart ---
+        new Chart(document.getElementById('costBreakdownChart'), {
+          type: 'pie',
+          data: {
+            labels: ['Panels', 'Inverter', 'Installation', 'Other'],
+            datasets: [{
+              label: 'Cost Breakdown',
+              data: [savings.capex * 0.5, savings.capex * 0.2, savings.capex * 0.15, savings.capex * 0.15],
+              backgroundColor: ['#4CAF50', '#FFC107', '#2196F3', '#E91E63']
+            }]
+          },
+          options: { responsive: true, plugins: { title: { display: true, text: 'Estimated Cost Breakdown' } } }
+        });
+
+        // --- Add Event Listeners for new buttons ---
+        document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+            if (!document.getElementById('leadContact').value) {
+                alert('Please enter your contact info to download.');
+                return;
+            }
+            window.open('/generated_pdfs/' + this.dataset.pdfPath, '_blank');
+        });
+
+        document.getElementById('bookSurveyBtn').addEventListener('click', () => {
+             alert('Thank you! Our team will contact you shortly to schedule the site survey.');
+        });
+
       } catch (err) {
-        resultDiv.innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
+        resultDiv.innerHTML = `<span style="color: red;">❌ Error: ${err.message}</span>`;
         console.error(err);
       }
     });
   </script>
-
 </body>
 </html>
-
