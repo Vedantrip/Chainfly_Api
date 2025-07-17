@@ -120,11 +120,6 @@
         <label>Customer Name:</label>
         <input type="text" name="customer_name" required placeholder="e.g., Priya Singh">
 
-        <label>Location:</label>
-        <button type="button" id="autoDetectLocation" style="width:auto; padding: 8px 12px; font-size: 0.9rem;">📍 Auto-detect</button>
-        <input type="number" name="latitude" step="any" required placeholder="Latitude e.g., 28.6139">
-        <input type="number" name="longitude" step="any" required placeholder="Longitude e.g., 77.2090">
-
         <label>Rooftop Area (m²):</label>
         <input type="number" name="rooftop_area_m2" required placeholder="e.g., 70">
 
@@ -137,6 +132,9 @@
           <option value="premium">Premium</option>
           <option value="ultra_premium">Ultra Premium</option>
         </select>
+        
+        <input type="hidden" name="latitude" value="28.6139">
+        <input type="hidden" name="longitude" value="77.2090">
 
         <button type="submit" style="margin-top: 20px;">Generate Proposal</button>
       </form>
@@ -151,51 +149,47 @@
   </div>
 
   <script>
-    // --- Auto-detect Location ---
-    document.getElementById('autoDetectLocation').addEventListener('click', () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          document.querySelector('[name="latitude"]').value = pos.coords.latitude.toFixed(4);
-          document.querySelector('[name="longitude"]').value = pos.coords.longitude.toFixed(4);
-        }, err => alert(`Geolocation Error: ${err.message}`));
-      } else {
-        alert("Geolocation is not supported by this browser.");
-      }
-    });
-
     // --- Add Event Listeners for Result Buttons ---
     function addResultEventListeners(result) {
         const { feasibility, proposal_pdf } = result;
         const pdfPath = proposal_pdf.replace("generated_pdfs/", "");
 
-        document.getElementById('downloadPdfBtn').addEventListener('click', async function() {
-            const contactInfo = document.getElementById('leadContact').value;
-            if (!contactInfo) {
-                alert('Please enter your contact info to download.');
-                return;
-            }
+        const downloadBtn = document.getElementById('downloadPdfBtn');
+        const surveyBtn = document.getElementById('bookSurveyBtn');
 
-            try {
-                await fetch('http://127.0.0.1:8000/capture-lead', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        customer_name: feasibility.customer_name,
-                        contact_info: contactInfo,
-                        system_size_kw: feasibility.system_size_kw
-                    })
-                });
-            } catch (err) {
-                console.error("Failed to capture lead:", err);
-            }
-            
-            // Open the PDF
-            window.open('/generated_pdfs/' + pdfPath, '_blank');
-        });
+        if(downloadBtn) {
+            downloadBtn.addEventListener('click', async function() {
+                const contactInfo = document.getElementById('leadContact').value;
+                if (!contactInfo) {
+                    alert('Please enter your contact info to download.');
+                    return;
+                }
+                
+                // Send lead data to backend
+                try {
+                    await fetch('http://127.0.0.1:8000/capture-lead', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            customer_name: feasibility.customer_name,
+                            contact_info: contactInfo,
+                            system_size_kw: feasibility.system_size_kw
+                        })
+                    });
+                } catch (err) {
+                    console.error("Failed to capture lead:", err);
+                }
+                
+                // Open the PDF
+                window.open('/generated_pdfs/' + pdfPath, '_blank');
+            });
+        }
 
-        document.getElementById('bookSurveyBtn').addEventListener('click', () => {
-            alert('Thank you! Our team will contact you shortly to schedule the site survey.');
-        });
+        if(surveyBtn) {
+            surveyBtn.addEventListener('click', () => {
+                alert('Thank you! Our team will contact you shortly to schedule the site survey.');
+            });
+        }
     }
 
     // --- Form Submission ---
@@ -221,10 +215,10 @@
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error("API request failed.");
+        if (!res.ok) throw new Error("API request failed. Please ensure the backend server is running.");
 
         const result = await res.json();
-        const { feasibility, savings, proposal_pdf } = result;
+        const { feasibility, savings } = result;
 
         let subsidyMessage = savings.subsidy > 0
           ? `<h5>🎉 You may be eligible for a ₹${savings.subsidy.toLocaleString()} subsidy!</h5>`
@@ -241,7 +235,7 @@
           ${subsidyMessage}
           <hr>
           <h4>Next Steps</h4>
-          <label>Enter Email or Phone to Proceed:</label>
+          <label for="leadContact">Enter Email or Phone to Proceed:</label>
           <input type="text" id="leadContact" placeholder="Your contact info">
           <div class="cta-buttons">
               <button id="downloadPdfBtn">Download Full Quote (PDF)</button>
