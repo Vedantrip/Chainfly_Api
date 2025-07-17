@@ -1,63 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ChainFly Solar Quote Generator</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #007bff;
-      --secondary-color: #28a745;
-      --light-gray: #f8f9fa;
-      --dark-gray: #343a40;
-    }
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
-      background-color: var(--light-gray);
-      color: var(--dark-gray);
+      background-color: #f4f4f4;
+      color: #333;
     }
     .hero {
-      background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2070&auto=format&fit=crop');
-      background-size: cover;
-      background-position: center;
-      padding: 60px 20px;
-      color: white;
+      background: linear-gradient(to bottom right, #007bff, #00c2ff);
+      padding: 40px;
       text-align: center;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
-    .hero h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 1.2rem;
+      color: white;
     }
     .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      padding: 40px 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .form-container, .result-container {
-      flex: 1;
-      min-width: 300px;
-      background: white;
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
       padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    }
-    h2 {
-      text-align: center;
-      margin-top: 0;
-      color: var(--primary-color);
+      border-radius: 10px;
     }
     label {
       display: block;
@@ -65,139 +32,115 @@
       font-weight: 600;
     }
     input, select, button {
-      margin-top: 5px;
-      padding: 12px;
       width: 100%;
-      box-sizing: border-box;
+      padding: 12px;
+      margin-top: 5px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
     }
     button {
-      cursor: pointer;
-      background-color: var(--primary-color);
+      background-color: #007bff;
       color: white;
+      font-weight: bold;
       border: none;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: background-color 0.3s;
+      margin-top: 20px;
+      cursor: pointer;
     }
     button:hover { background-color: #0056b3; }
-    .cta-buttons button {
-        background-color: var(--secondary-color);
-        margin-top: 10px;
-    }
-    .cta-buttons button#bookSurveyBtn {
-        background-color: #ffc107;
-        color: black;
+    .preset-buttons button {
+      width: auto;
+      background-color: #6c757d;
+      margin-right: 8px;
     }
     .loader {
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid var(--primary-color);
+      margin: 20px auto;
+      border: 5px solid #eee;
+      border-top: 5px solid #007bff;
       border-radius: 50%;
       width: 40px;
       height: 40px;
       animation: spin 1s linear infinite;
-      margin: 20px auto;
     }
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
+    }
+    #result {
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-
   <div class="hero">
-    <h1>Go Solar, Save Big</h1>
-    <p>Get an instant, data-driven solar proposal for your rooftop.</p>
+    <h1>ChainFly Rooftop Solar Quote</h1>
+    <p>Instant estimate. Smarter decision. Cleaner future. ⚡🌞</p>
   </div>
 
   <div class="container">
-    <div class="form-container">
-      <h2>Generate Your Proposal</h2>
-      <form id="quoteForm">
-        <label>Customer Name:</label>
-        <input type="text" name="customer_name" required placeholder="e.g., Priya Singh">
-
-        <label>Rooftop Area (m²):</label>
-        <input type="number" name="rooftop_area_m2" required placeholder="e.g., 70">
-
-        <label>Monthly Bill (₹):</label>
-        <input type="number" name="monthly_bill" required placeholder="e.g., 2500">
-
-        <label>Panel Type:</label>
-        <select name="panel_type">
-          <option value="basic">Basic</option>
-          <option value="premium">Premium</option>
-          <option value="ultra_premium">Ultra Premium</option>
-        </select>
-        
-        <input type="hidden" name="latitude" value="28.6139">
-        <input type="hidden" name="longitude" value="77.2090">
-
-        <button type="submit" style="margin-top: 20px;">Generate Proposal</button>
-      </form>
-    </div>
-
-    <div class="result-container">
-      <h2>Your Results</h2>
-      <div id="result">
-        <p style="text-align:center; color: #6c757d;">Your personalized solar analysis will appear here.</p>
+    <form id="quoteForm">
+      <div class="preset-buttons">
+        <button type="button" class="presetBtn" data-area="70" data-bill="2000">2 BHK House – 3kW</button>
+        <button type="button" class="presetBtn" data-area="120" data-bill="4000">Small Shop – 5kW</button>
       </div>
-    </div>
+
+      <label>Name:</label>
+      <input type="text" name="customer_name" required placeholder="e.g., Sarthak Jain"/>
+
+      <label>Email for Contact / PDF:</label>
+      <input type="email" name="email" required placeholder="e.g., your@email.com" />
+
+      <label>Latitude / Longitude:
+        <button type="button" id="autoDetectBtn" style="margin-left: 10px;">📍 Auto-detect</button>
+      </label>
+      <input type="number" name="latitude" step="0.0001" required placeholder="e.g., 28.6139">
+      <input type="number" name="longitude" step="0.0001" required placeholder="e.g., 77.2090">
+
+      <label>Rooftop Area (m²):</label>
+      <input type="number" name="rooftop_area_m2" required placeholder="e.g., 70" />
+
+      <label>Monthly Bill (₹):</label>
+      <input type="number" name="monthly_bill" required placeholder="e.g., 2500" />
+
+      <label>Panel Type:</label>
+      <select name="panel_type">
+        <option value="basic">Basic</option>
+        <option value="premium">Premium</option>
+        <option value="ultra_premium">Ultra Premium</option>
+      </select>
+
+      <button type="submit">⚡ Generate Proposal</button>
+    </form>
+
+    <div id="result"></div>
   </div>
 
   <script>
-    // --- Add Event Listeners for Result Buttons ---
-    function addResultEventListeners(result) {
-        const { feasibility, proposal_pdf } = result;
-        const pdfPath = proposal_pdf.replace("generated_pdfs/", "");
+    const BACKEND = "https://your-api-url.com";  // Change this to your live backend
 
-        const downloadBtn = document.getElementById('downloadPdfBtn');
-        const surveyBtn = document.getElementById('bookSurveyBtn');
+    // Presets
+    document.querySelectorAll('.presetBtn').forEach(btn => {
+      btn.onclick = function () {
+        document.querySelector('[name="rooftop_area_m2"]').value = btn.dataset.area;
+        document.querySelector('[name="monthly_bill"]').value = btn.dataset.bill;
+      };
+    });
 
-        if(downloadBtn) {
-            downloadBtn.addEventListener('click', async function() {
-                const contactInfo = document.getElementById('leadContact').value;
-                if (!contactInfo) {
-                    alert('Please enter your contact info to download.');
-                    return;
-                }
-                
-                // Send lead data to backend
-                try {
-                    await fetch('http://127.0.0.1:8000/capture-lead', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            customer_name: feasibility.customer_name,
-                            contact_info: contactInfo,
-                            system_size_kw: feasibility.system_size_kw
-                        })
-                    });
-                } catch (err) {
-                    console.error("Failed to capture lead:", err);
-                }
-                
-                // Open the PDF
-                window.open('/generated_pdfs/' + pdfPath, '_blank');
-            });
-        }
+    // Geolocation
+    document.getElementById("autoDetectBtn").onclick = function () {
+      navigator.geolocation.getCurrentPosition(pos => {
+        document.querySelector('[name="latitude"]').value = pos.coords.latitude.toFixed(4);
+        document.querySelector('[name="longitude"]').value = pos.coords.longitude.toFixed(4);
+      }, err => {
+        alert("Failed to fetch location.");
+      });
+    };
 
-        if(surveyBtn) {
-            surveyBtn.addEventListener('click', () => {
-                alert('Thank you! Our team will contact you shortly to schedule the site survey.');
-            });
-        }
-    }
-
-    // --- Form Submission ---
-    document.getElementById('quoteForm').addEventListener('submit', async function(e) {
+    // Form Submission
+    document.getElementById("quoteForm").addEventListener("submit", async function (e) {
       e.preventDefault();
       const form = e.target;
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = '<div class="loader"></div><p style="text-align:center;">Analyzing your rooftop...</p>';
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `<div class="loader"></div><p style="text-align:center;">Analyzing your rooftop...</p>`;
 
       const data = {
         customer_name: form.customer_name.value,
@@ -209,58 +152,47 @@
       };
 
       try {
-        const res = await fetch('http://127.0.0.1:8000/feasibility', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch(`${BACKEND}/feasibility`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error("API request failed. Please ensure the backend server is running.");
+        if (!res.ok) throw new Error("API Error: " + res.statusText);
 
         const result = await res.json();
-        const { feasibility, savings } = result;
+        const { feasibility, savings, proposal_pdf } = result;
+        const pdfName = proposal_pdf.split("/").pop();
 
-        let subsidyMessage = savings.subsidy > 0
-          ? `<h5>🎉 You may be eligible for a ₹${savings.subsidy.toLocaleString()} subsidy!</h5>`
-          : '';
-
-        resultDiv.innerHTML = `
-          <h4>✅ Proposal for ${feasibility.customer_name}</h4>
-          <p><strong>📦 System Size:</strong> ${feasibility.system_size_kw} kW</p>
-          <p><strong>💸 Est. Net Cost:</strong> ₹${savings.net_capex.toLocaleString()}</p>
-          <p><strong>💰 Monthly Savings:</strong> ₹${savings.monthly_savings.toLocaleString()}</p>
-          <div style="margin: 20px 0;">
-            <canvas id="costBreakdownChart"></canvas>
-          </div>
-          ${subsidyMessage}
-          <hr>
-          <h4>Next Steps</h4>
-          <label for="leadContact">Enter Email or Phone to Proceed:</label>
-          <input type="text" id="leadContact" placeholder="Your contact info">
-          <div class="cta-buttons">
-              <button id="downloadPdfBtn">Download Full Quote (PDF)</button>
-              <button id="bookSurveyBtn">Book Site Survey for ₹499</button>
-          </div>
-        `;
-
-        new Chart(document.getElementById('costBreakdownChart'), {
-          type: 'doughnut',
-          data: {
-            labels: ['Panels', 'Inverter', 'Installation', 'Other'],
-            datasets: [{
-              data: [savings.capex * 0.5, savings.capex * 0.2, savings.capex * 0.15, savings.capex * 0.15],
-              backgroundColor: ['#4CAF50', '#FFC107', '#2196F3', '#E91E63']
-            }]
-          },
-          options: { responsive: true, plugins: { title: { display: true, text: 'Estimated Cost Breakdown' } } }
+        // ⬇️ Save lead to /capture-lead
+        await fetch(`${BACKEND}/capture-lead`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customer_name: data.customer_name,
+            contact_info: form.email.value,
+            system_size_kw: feasibility.system_size_kw
+          })
         });
 
-        // Add event listeners for the new buttons
-        addResultEventListeners(result);
+        resultDiv.innerHTML = `
+          <h3>✅ Proposal for ${feasibility.customer_name}</h3>
+          <p>📦 System Size: ${feasibility.system_size_kw} kW</p>
+          <p>💰 Monthly Savings: ₹${savings.monthly_savings.toLocaleString()}</p>
+          <p>⚡ Payback Period: ${savings.payback_years} years</p>
+          <p>📈 ROI: ${savings.roi_percent_25yr}%</p>
 
+          <a href="/generated_pdfs/${pdfName}" target="_blank">
+            <button>📄 Download Full Quote (PDF)</button>
+          </a>
+          <br/><br/>
+          <button style="background:#ffc107; color:black;" onclick="alert('✅ Our team will contact you shortly for the site visit.')">
+            📅 Book Site Survey – ₹499
+          </button>
+        `;
       } catch (err) {
-        resultDiv.innerHTML = `<p style="color: red; text-align:center;">❌ Error: ${err.message}</p>`;
         console.error(err);
+        resultDiv.innerHTML = `<p style="color:red;">❌ Error: ${err.message}</p>`;
       }
     });
   </script>
