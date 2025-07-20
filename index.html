@@ -115,8 +115,7 @@
   </div>
 
   <script>
-    const BACKEND = "https://chainflyapi-production.up.railway.app";
-"; 
+    const BACKEND = "https://chainflyapi-production.up.railway.app"; // ✅ fixed line
 
     // Presets
     document.querySelectorAll('.presetBtn').forEach(btn => {
@@ -183,7 +182,7 @@
           <p>⚡ Payback Period: ${savings.payback_years} years</p>
           <p>📈 ROI: ${savings.roi_percent_25yr}%</p>
 
-          <a href="/generated_pdfs/${pdfName}" target="_blank">
+          <a href="${BACKEND}/generated_pdfs/${pdfName}" target="_blank">
             <button>📄 Download Full Quote (PDF)</button>
           </a>
           <br/><br/>
