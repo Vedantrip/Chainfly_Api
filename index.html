@@ -115,7 +115,7 @@
   </div>
 
   <script>
-    const BACKEND = "https://chainflyapi-production.up.railway.app"; // ✅ fixed line
+    const BACKEND = "https://chainflyapi-production.up.railway.app";
 
     // Presets
     document.querySelectorAll('.presetBtn').forEach(btn => {
@@ -159,7 +159,6 @@
         });
 
         if (!res.ok) throw new Error("API Error: " + res.statusText);
-
         const result = await res.json();
         const { feasibility, savings, proposal_pdf } = result;
         const pdfName = proposal_pdf.split("/").pop();
@@ -176,12 +175,18 @@
         });
 
         resultDiv.innerHTML = `
-          <h3>✅ Proposal for ${feasibility.customer_name}</h3>
-          <p>📦 System Size: ${feasibility.system_size_kw} kW</p>
-          <p>💰 Monthly Savings: ₹${savings.monthly_savings.toLocaleString()}</p>
-          <p>⚡ Payback Period: ${savings.payback_years} years</p>
-          <p>📈 ROI: ${savings.roi_percent_25yr}%</p>
-
+          <h3>📊 Rooftop Solar Dashboard</h3>
+          <div style="background:#e6f5ec; padding: 12px; border-left: 5px solid green; border-radius: 5px;">
+            <strong>🎉 Subsidy Eligibility:</strong> You may be eligible for a ₹${savings.subsidy.toLocaleString()} subsidy under MNRE!
+          </div>
+          <hr/>
+          <p>📦 <strong>System Size:</strong> ${feasibility.system_size_kw} kW</p>
+          <p>💰 <strong>Monthly Savings:</strong> ₹${savings.monthly_savings.toLocaleString()}</p>
+          <p>⚡ <strong>Payback Period:</strong> ${savings.payback_years} years</p>
+          <p>📈 <strong>ROI:</strong> ${savings.roi_percent_25yr}%</p>
+          <h4 style="margin-top: 30px;">💸 Cost Breakdown</h4>
+          <canvas id="breakdownChart" style="max-width: 400px;"></canvas>
+          <h4 style="margin-top: 30px;">📄 Quote & Site Visit</h4>
           <a href="${BACKEND}/generated_pdfs/${pdfName}" target="_blank">
             <button>📄 Download Full Quote (PDF)</button>
           </a>
@@ -190,6 +195,28 @@
             📅 Book Site Survey – ₹499
           </button>
         `;
+
+        new Chart(document.getElementById("breakdownChart"), {
+          type: "pie",
+          data: {
+            labels: ["Panels", "Inverter", "Installation", "Other"],
+            datasets: [{
+              data: [100000, 35000, 30000, 22000],
+              backgroundColor: ['#4CAF50', '#FF9800', '#2196F3', '#9C27B0']
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'right' },
+              title: {
+                display: true,
+                text: "Estimated Cost Split (₹1,87,000)"
+              }
+            }
+          }
+        });
+
       } catch (err) {
         console.error(err);
         resultDiv.innerHTML = `<p style="color:red;">❌ Error: ${err.message}</p>`;
